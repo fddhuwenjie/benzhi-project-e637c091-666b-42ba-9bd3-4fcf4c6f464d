@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>展柜微环境异常处置台</title>
+  <link rel="stylesheet" href="/app.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">柜</span><div><strong>展柜微环境异常处置台</strong><span>预防性保护值守</span></div></div>
+    <nav aria-label="主导航">
+      <button class="nav-button active" data-view="queue">异常处置</button>
+      <button class="nav-button" data-view="archives">处置档案</button>
+    </nav>
+    <div class="service-state"><span></span>服务正常</div>
+  </header>
+
+  <main id="queue-view" class="workspace">
+    <aside class="queue-panel">
+      <div class="panel-heading">
+        <div><h1>异常队列</h1><p id="queue-summary">正在载入...</p></div>
+        <button id="open-create" class="primary small" type="button">＋ 登记异常</button>
+      </div>
+      <div class="filters">
+        <label><span>处置状态</span><select id="state-filter"><option value="">全部状态</option><option value="assessed">已分级</option><option value="plan_pending">待审批</option><option value="approved">待执行</option><option value="executing">处置中</option><option value="verifying">复测中</option><option value="closed">已归档</option></select></label>
+        <label><span>展柜</span><select id="showcase-filter"><option value="">全部展柜</option></select></label>
+      </div>
+      <div id="incident-list" class="incident-list" aria-live="polite"></div>
+    </aside>
+
+    <section id="detail-panel" class="detail-panel">
+      <div id="empty-state" class="empty-state">
+        <div class="empty-icon" aria-hidden="true">◎</div>
+        <h2>选择一项异常</h2>
+        <p>查看保护目标、处置方案、现场动作和复测结果。</p>
+      </div>
+      <div id="detail-content" class="hidden">
+        <div class="detail-heading">
+          <div><div id="detail-kicker" class="kicker"></div><h2 id="detail-title"></h2><p id="detail-description"></p></div>
+          <div class="heading-meta"><span id="detail-severity" class="badge"></span><span id="detail-state" class="state-pill"></span><span id="detail-revision" class="revision"></span></div>
+        </div>
+        <div class="baseline-band" id="baseline"></div>
+        <div id="action-zone" class="action-zone"></div>
+        <div class="detail-columns">
+          <section class="record-section"><div class="section-title"><h3>处置记录</h3><span id="record-count"></span></div><div id="record-list" class="record-list"></div></section>
+          <section class="timeline-section"><div class="section-title"><h3>流转审计</h3><span>不可修改</span></div><ol id="audit-list" class="audit-list"></ol></section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <main id="archives-view" class="archives-view hidden">
+    <div class="archive-header"><div><h1>处置档案</h1><p>检索已安全关闭的微环境异常及处置证据。</p></div><form id="archive-search" class="search-form"><input id="archive-query" type="search" placeholder="事件、展柜、责任人、动作或证据"><button class="primary" type="submit">检索</button></form></div>
+    <div id="archive-list" class="archive-table"></div>
+  </main>
+
+  <dialog id="create-dialog">
+    <form id="create-form" class="dialog-form">
+      <div class="dialog-heading"><div><h2>登记展柜异常</h2><p>系统将按五分钟窗口和读数指纹检查重复上报。</p></div><button class="icon-button close-dialog" type="button" aria-label="关闭">×</button></div>
+      <div class="form-grid">
+        <label class="wide"><span>展柜</span><select name="showcase_id" required></select></label>
+        <label><span>发现来源</span><select name="source" required><option value="sensor">传感器告警</option><option value="manual">人工发现</option></select></label>
+        <label><span>偏差指标</span><select name="metric" required><option value="humidity">相对湿度</option><option value="temperature">温度</option></select></label>
+        <label><span>观测值</span><input name="observed_value" type="number" step="0.1" required></label>
+        <label><span>发现时间</span><input name="detected_at" type="datetime-local" required></label>
+        <label><span>报告人</span><input name="reporter" maxlength="80" required></label>
+        <label class="wide"><span>异常描述</span><textarea name="description" rows="3" maxlength="500" required></textarea></label>
+      </div>
+      <div class="dialog-actions"><button class="secondary close-dialog" type="button">取消</button><button class="primary" type="submit">登记并自动分级</button></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast hidden" role="status"></div>
+</body>
+</html>
